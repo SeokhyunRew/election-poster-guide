@@ -14,25 +14,25 @@ const layoutDetails = [
   {
     id: 'FOCUS_PERSON',
     name: LAYOUTS.FOCUS_PERSON,
-    description: '후보자의 얼굴을 크게 배치하여 시각적 인지도를 높이는 레이아웃',
+    description: '후보자의 얼굴을 강조하여 기억에 남기기 좋은 레이아웃 <br /><br /> 레이아웃 추천 분야: <br />첫 인상 중심의 후보 브랜딩 포스터',
     preview: '/layouts/focus-person.png'
   },
   {
     id: 'FOCUS_NAME',
     name: LAYOUTS.FOCUS_NAME,
-    description: '후보자의 이름을 강조하여 기억에 남기기 좋은 레이아웃',
+    description: '후보자의 이름을 강조하여 기억에 남기기 좋은 레이아웃 <br /><br /> 레이아웃 추천 분야: <br />첫 출마 후보의 이름 인지도 제고용 포스터, 유사 이름의 타 후보와 구분이 필요한 경우',
     preview: '/layouts/focus-name.png'
   },
   {
     id: 'FOCUS_SLOGAN',
     name: LAYOUTS.FOCUS_SLOGAN,
-    description: '슬로건을 중심으로 전체적인 메시지를 전달하는 레이아웃',
+    description: '슬로건을 중심으로 전체적인 메시지를 전달하는 레이아웃 <br /><br /> 레이아웃 추천 분야: <br />유사한 포스터 속에서 이질적인 디자인으로 주목도를 높이려는 경우, 후보자의 이미지 또는 감성적 메시지를 강조하고자 할 때',
     preview: '/layouts/focus-slogan.png'
   },
   {
     id: 'FOCUS_INFO',
     name: LAYOUTS.FOCUS_INFO,
-    description: '중요 정보를 효율적으로 전달하는 깔끔한 레이아웃',
+    description: '정제된 정보를 안정적으로 전달하는 익숙한 레이아웃 <br /><br /> 레이아웃 추천 분야: <br />명확한 전달 목적을 가진 포스터 (예: 공약 비교, 정책 요약 등), 행정기관 주도형 정보 게시물, 투표 안내 포스터 등 공식적 톤 강조시',
     preview: '/layouts/focus-info.png'
   }
 ];
@@ -45,7 +45,7 @@ export default function SelectLayoutPage() {
   };
 
   return (
-    <div style={{ minHeight: '100vh', background: '#000', color: '#00FFC2' }}>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#00FFC2', paddingBottom: '3rem' }}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4" style={{ color: '#00FFC2' }}>
@@ -72,11 +72,11 @@ export default function SelectLayoutPage() {
                   style={{ borderBottom: '1px solid #00FFC2' }}
                 />
               </div>
-              <div className="p-6">
+              <div className="p-3">
                 <h3 className="text-xl font-semibold mb-2" style={{ color: '#00FFC2' }}>
                   {layout.name}
                 </h3>
-                <p style={{ color: '#00FFC2' }}>{layout.description}</p>
+                <p style={{ color: '#00FFC2', fontSize: '0.95rem', margin: 0 }} dangerouslySetInnerHTML={{ __html: layout.description }} />
               </div>
             </div>
           ))}

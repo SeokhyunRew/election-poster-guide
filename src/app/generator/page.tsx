@@ -265,9 +265,9 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           sloganStyle: {
             position: 'absolute' as const,
             top: '38%',
-            right: '5%',
+            left: '5%',
             width: '40%',
-            textAlign: 'right' as const,
+            textAlign: 'left' as const,
             fontSize: '1.5rem',
             fontWeight: 700,
             color: '#9C27B0',
@@ -469,7 +469,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
   const layoutStyle = getLayoutStyle(posterData.layout, posterData.infoSubLayout);
 
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: '#000', color: '#00FFC2', paddingBottom: '3rem' }}>
       {showLayoutSelector && (
         <LayoutSelector onSelect={handleLayoutSelect} />
       )}
@@ -477,7 +477,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0', width: '100%', maxWidth: 480, margin: '0 auto' }}>
           <div style={{ width: '100%', padding: '0 1rem' }}>
             <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>
-              선택한 레이아웃: {posterData.layout}
+              선택한 레이아웃: {LAYOUTS[posterData.layout as keyof typeof LAYOUTS] || ''}
             </div>
             {/* FOCUS_INFO일 때 infoSubLayout 선택 UI */}
             {posterData.layout === 'FOCUS_INFO' && (
@@ -491,7 +491,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
                     checked={posterData.infoSubLayout === 'name'}
                     onChange={handleInfoSubLayoutChange}
                   />
-                  이름 인지 강화형
+                  정보 효율 전달 1형
                 </label>
                 <label>
                   <input
@@ -501,7 +501,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
                     checked={posterData.infoSubLayout === 'slogan'}
                     onChange={handleInfoSubLayoutChange}
                   />
-                  슬로건 집중 유도형 및 전반 탐색 유도형
+                  정보 효율 전달형 2형
                 </label>
               </div>
             )}
