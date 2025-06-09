@@ -63,7 +63,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 30,
+          bottom: '2.8rem',
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -151,7 +151,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 30,
+          bottom: '2.8rem',
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -250,7 +250,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           },
           nameStyle: {
             position: 'absolute' as const,
-            bottom: 30,
+            bottom: '2.8rem',
             left: '50%',
             transform: 'translateX(-50%)',
             fontSize: '6.2rem',
@@ -300,7 +300,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 24,
+          bottom: '2.8rem',
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
