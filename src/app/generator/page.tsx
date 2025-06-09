@@ -63,7 +63,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 24,
+          bottom: 30,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -151,7 +151,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 24,
+          bottom: 30,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -176,7 +176,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         smallSloganStyle: {
           position: 'absolute' as const,
-          bottom: '6.5rem',
+          bottom: '8.5rem',
           left: 0,
           width: '100%',
           textAlign: 'center' as const,
@@ -250,7 +250,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           },
           nameStyle: {
             position: 'absolute' as const,
-            bottom: 24,
+            bottom: 30,
             left: '50%',
             transform: 'translateX(-50%)',
             fontSize: '6.2rem',
@@ -275,7 +275,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           },
           smallSloganStyle: {
             position: 'absolute' as const,
-            bottom: '6.5rem',
+            bottom: '8.5rem',
             left: 0,
             width: '100%',
             textAlign: 'center' as const,
@@ -352,27 +352,33 @@ function splitSloganBy4(str: string) {
   return str.replace(/(.{4})/g, '$1\n').trim();
 }
 
-const PosterPreview = ({ data, posterRef, layoutStyle }: { data: PosterData; posterRef: React.RefObject<HTMLDivElement | null>; layoutStyle: LayoutStyle }) => {
+const PosterPreview = ({ data, posterRef, layoutStyle, isDownload = false }: { data: PosterData; posterRef: React.RefObject<HTMLDivElement | null>; layoutStyle: LayoutStyle; isDownload?: boolean }) => {
   return (
     <div
       ref={posterRef}
       style={{
         position: 'relative',
-        marginTop: '2rem',
-        border: '3px solid #000000',
+        marginTop: isDownload ? 0 : '2rem',
+        border: isDownload ? 0 : '3px solid #000000',
         backgroundColor: '#ffffff',
         width: '420px',
         height: '594px',
         overflow: 'hidden',
         fontFamily: 'Arial, sans-serif',
         boxSizing: 'border-box',
+        paddingBottom: 48,
       }}
     >
       {data.imageSrc && (
         <img
           src={data.imageSrc}
           alt="Uploaded"
-          style={layoutStyle.imageStyle}
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            ...layoutStyle.imageStyle,
+          }}
         />
       )}
       {/* 슬로건 (왼쪽/오른쪽) - 4글자마다 줄바꿈 */}
@@ -461,7 +467,8 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
   // Download logic (hiddenPosterRef 사용)
   const handleDownload = async () => {
     if (!hiddenPosterRef.current) return;
-    const canvas = await html2canvas(hiddenPosterRef.current);
+    // html2canvas 옵션에 scale: 1을 명시할 수도 있음 (현재는 기본값 사용)
+    const canvas = await html2canvas(hiddenPosterRef.current /*, { scale: 1 }*/);
     const link = document.createElement('a');
     link.download = 'poster.png';
     link.href = canvas.toDataURL();
@@ -558,7 +565,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
           </div>
           {/* 다운로드용 hidden DOM */}
           <div style={{ position: 'absolute', left: -9999, top: 0 }} aria-hidden="true">
-            <PosterPreview data={posterData} posterRef={hiddenPosterRef} layoutStyle={layoutStyle} />
+            <PosterPreview data={posterData} posterRef={hiddenPosterRef} layoutStyle={layoutStyle} isDownload />
           </div>
           <div style={{ width: '100%', padding: '0 1rem' }}>
             <div style={{ marginTop: '2rem' }}>
