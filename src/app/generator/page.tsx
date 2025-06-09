@@ -428,6 +428,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
   });
   const [showLayoutSelector, setShowLayoutSelector] = useState(!initialLayout);
   const posterRef = useRef<HTMLDivElement | null>(null);
+  const hiddenPosterRef = useRef<HTMLDivElement | null>(null); // 다운로드용 hidden ref 추가
 
   // If initialLayout is set, do not show the layout selector
   const handleLayoutSelect = (layout: string) => {
@@ -457,10 +458,10 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
     setPosterData((prev) => ({ ...prev, infoSubLayout: e.target.value as 'name' | 'slogan' }));
   };
 
-  // Download logic
+  // Download logic (hiddenPosterRef 사용)
   const handleDownload = async () => {
-    if (!posterRef.current) return;
-    const canvas = await html2canvas(posterRef.current);
+    if (!hiddenPosterRef.current) return;
+    const canvas = await html2canvas(hiddenPosterRef.current);
     const link = document.createElement('a');
     link.download = 'poster.png';
     link.href = canvas.toDataURL();
@@ -554,6 +555,10 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
           {/* 미리보기: 슬로건 글자색 선택 바로 아래, 모바일 비율로 */}
           <div style={{ width: '100vw', maxWidth: 420, margin: '2rem auto 0 auto', display: 'flex', justifyContent: 'center' }}>
             <PosterPreview data={posterData} posterRef={posterRef} layoutStyle={layoutStyle} />
+          </div>
+          {/* 다운로드용 hidden DOM */}
+          <div style={{ position: 'absolute', left: -9999, top: 0 }} aria-hidden="true">
+            <PosterPreview data={posterData} posterRef={hiddenPosterRef} layoutStyle={layoutStyle} />
           </div>
           <div style={{ width: '100%', padding: '0 1rem' }}>
             <div style={{ marginTop: '2rem' }}>
