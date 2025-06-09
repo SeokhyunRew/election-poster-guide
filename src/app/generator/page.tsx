@@ -339,9 +339,9 @@ const LayoutSelector = ({ onSelect }: { onSelect: (layout: string) => void }) =>
 );
 
 const ColorPicker = ({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) => (
-  <div style={{ marginTop: '1.5rem' }}>
-    <h3>{label}</h3>
-    <input type="color" value={value} onChange={(e) => onChange(e.target.value)} />
+  <div style={{ marginTop: '1.5rem', border: '2px solid #00FFC2', borderRadius: 8, padding: '0.75rem', background: 'rgba(0,255,194,0.07)', display: 'flex', alignItems: 'center', gap: '1rem' }}>
+    <h3 style={{ margin: 0, color: '#00FFC2', fontWeight: 600, fontSize: '1rem', minWidth: 90 }}>{label}</h3>
+    <input type="color" value={value} onChange={(e) => onChange(e.target.value)} style={{ width: 36, height: 36, border: 'none', background: 'transparent', cursor: 'pointer' }} />
   </div>
 );
 
@@ -474,8 +474,8 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
         <LayoutSelector onSelect={handleLayoutSelect} />
       )}
       {posterData.layout && (
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
-          <div>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0', width: '100%', maxWidth: 480, margin: '0 auto' }}>
+          <div style={{ width: '100%', padding: '0 1rem' }}>
             <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>
               선택한 레이아웃: {posterData.layout}
             </div>
@@ -549,13 +549,18 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
             )}
             <ColorPicker label="이름 글자색 선택:" value={posterData.nameColor} onChange={(v) => handleColorChange('nameColor', v)} />
             <ColorPicker label="슬로건 글자색 선택:" value={posterData.sloganColor} onChange={(v) => handleColorChange('sloganColor', v)} />
+          </div>
+          {/* 미리보기: 슬로건 글자색 선택 바로 아래, 모바일 비율로 */}
+          <div style={{ width: '100vw', maxWidth: 420, margin: '2rem auto 0 auto', display: 'flex', justifyContent: 'center' }}>
+            <PosterPreview data={posterData} posterRef={posterRef} layoutStyle={layoutStyle} />
+          </div>
+          <div style={{ width: '100%', padding: '0 1rem' }}>
             <div style={{ marginTop: '2rem' }}>
-              <button onClick={handleDownload} style={{ padding: '0.75rem 2rem', fontSize: '1.1rem', background: '#00FFC2', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+              <button onClick={handleDownload} style={{ width: '100%', padding: '0.75rem 2rem', fontSize: '1.1rem', background: '#00FFC2', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
                 포스터 이미지 다운로드
               </button>
             </div>
           </div>
-          <PosterPreview data={posterData} posterRef={posterRef} layoutStyle={layoutStyle} />
         </div>
       )}
     </div>
