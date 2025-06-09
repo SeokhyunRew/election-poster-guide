@@ -49,10 +49,17 @@ export default function SelectLayoutPage() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold mb-4" style={{ color: '#00FFC2' }}>
-            포스터 레이아웃 선택
+            전공종합설계및논문 2조
           </h1>
           <p className="text-xl" style={{ color: '#00FFC2' }}>
-            원하는 레이아웃을 선택하여 포스터를 만들어보세요
+          -구세영, 김나은, 류석현, 최예서, 한재원
+          </p>
+          <br />
+          <h1 className="text-4xl font-bold mb-4" style={{ color: '#00FFC2' }}>
+            선거 포스터 가이드라인 제시
+          </h1>
+          <p className="text-xl" style={{ color: '#00FFC2' }}>
+            후보자님의 목적에 맞는 레이아웃을 선택하여<br /> 포스터를 만들어보세요
           </p>
         </div>
 
