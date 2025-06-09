@@ -4,6 +4,7 @@ import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { CSSProperties } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
+import { Suspense } from 'react';
 
 // Types
 interface PosterData {
@@ -561,7 +562,7 @@ function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
   );
 }
 
-export default function GeneratorPageWrapper() {
+function GeneratorPageWrapper() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const layout = searchParams.get('layout');
@@ -578,3 +579,13 @@ export default function GeneratorPageWrapper() {
     </div>
   );
 }
+
+function GeneratorPageWrapperWithSuspense() {
+  return (
+    <Suspense fallback={<div style={{ color: '#00FFC2', background: '#000', minHeight: '100vh' }}>로딩 중...</div>}>
+      <GeneratorPageWrapper />
+    </Suspense>
+  );
+}
+
+export default GeneratorPageWrapperWithSuspense;
