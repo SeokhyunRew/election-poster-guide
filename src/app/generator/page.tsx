@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { CSSProperties } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
@@ -32,8 +32,6 @@ const LAYOUTS = {
   FOCUS_SLOGAN: '슬로건 집중 유도형 및 전반 탐색 유도형',
   FOCUS_INFO: '정보 효율 전달형',
 } as const;
-
-type LayoutKey = keyof typeof LAYOUTS;
 
 const INITIAL_POSTER_DATA: PosterData = {
   layout: null,

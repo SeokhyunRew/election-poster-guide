@@ -1,7 +1,6 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
 
 // Constants
 const LAYOUTS = {
@@ -40,10 +39,8 @@ const layoutDetails = [
 
 export default function SelectLayoutPage() {
   const router = useRouter();
-  const [selectedLayout, setSelectedLayout] = useState<string | null>(null);
 
   const handleLayoutSelect = (layoutId: string) => {
-    setSelectedLayout(layoutId);
     router.push(`/generator?layout=${layoutId}`);
   };
 
