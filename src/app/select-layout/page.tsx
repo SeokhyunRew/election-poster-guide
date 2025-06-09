@@ -56,7 +56,7 @@ export default function SelectLayoutPage() {
           </p>
           <br />
           <h1 className="text-4xl font-bold mb-4" style={{ color: '#00FFC2' }}>
-            선거포스터 가이드라인 제시
+            선거 포스터 가이드라인 <br /> 도우미&제작 서비스
           </h1>
           <p className="text-xl" style={{ color: '#00FFC2' }}>
             후보자님의 목적에 맞는 레이아웃을 선택하여<br /> 포스터를 만들어보세요
