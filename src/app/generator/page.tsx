@@ -3,6 +3,7 @@
 import { useState, useRef, useCallback } from 'react';
 import html2canvas from 'html2canvas';
 import { CSSProperties } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 
 // Types
 interface PosterData {
@@ -32,6 +33,8 @@ const LAYOUTS = {
   FOCUS_INFO: '정보 효율 전달형',
 } as const;
 
+type LayoutKey = keyof typeof LAYOUTS;
+
 const INITIAL_POSTER_DATA: PosterData = {
   layout: null,
   imageSrc: null,
@@ -46,47 +49,7 @@ const INITIAL_POSTER_DATA: PosterData = {
 
 const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'): LayoutStyle => {
   switch (layout) {
-    case LAYOUTS.FOCUS_PERSON: // 인물 집중형
-      return {
-        imageStyle: {
-          position: 'absolute' as const,
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          width: '100%',
-          height: '100%', // 아래 70%만 채움
-          borderRadius: 0,
-          objectFit: 'cover',
-          maxHeight: '85%',
-        },
-        nameStyle: {
-          position: 'absolute' as const,
-          bottom: 0,
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '6.2rem',
-          color: '#fff',
-          fontWeight: 900,
-          width: '95%',
-          textAlign: 'center' as const,
-          letterSpacing: '-2px',
-          lineHeight: 1.1,
-          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
-        },
-        sloganStyle: {
-          position: 'absolute' as const,
-          top: '38%', // 얼굴 높이쯤
-          left: '5%', // 왼쪽에 붙임
-          width: '40%',
-          textAlign: 'left' as const,
-          fontSize: '1.5rem',
-          fontWeight: 700,
-          color: '#9C27B0',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
-          whiteSpace: 'pre-line',
-        },
-      };
-    case LAYOUTS.FOCUS_NAME:
+    case 'FOCUS_PERSON':
       return {
         imageStyle: {
           position: 'absolute' as const,
@@ -101,7 +64,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          top: '1.6rem', // 간격을 줄임
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -122,7 +85,45 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           fontSize: '1.5rem',
           fontWeight: 700,
           color: '#9C27B0',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          whiteSpace: 'pre-line',
+        },
+      };
+    case 'FOCUS_NAME':
+      return {
+        imageStyle: {
+          position: 'absolute' as const,
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          height: '100%',
+          borderRadius: 0,
+          objectFit: 'cover',
+          maxHeight: '85%',
+        },
+        nameStyle: {
+          position: 'absolute' as const,
+          top: '1.6rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          fontSize: '6.2rem',
+          color: '#fff',
+          fontWeight: 900,
+          width: '95%',
+          textAlign: 'center' as const,
+          letterSpacing: '-2px',
+          lineHeight: 1.1,
+          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
+        },
+        sloganStyle: {
+          position: 'absolute' as const,
+          top: '38%',
+          left: '5%',
+          width: '40%',
+          textAlign: 'left' as const,
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          color: '#9C27B0',
           whiteSpace: 'pre-line',
         },
         smallSloganStyle: {
@@ -131,13 +132,12 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           left: 0,
           width: '100%',
           textAlign: 'center' as const,
-          fontSize: '1.3rem', // 글자 크기도 살짝 줄임
+          fontSize: '1.3rem',
           fontWeight: 700,
           color: '#fff',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
         },
       };
-    case LAYOUTS.FOCUS_SLOGAN:
+    case 'FOCUS_SLOGAN':
       return {
         imageStyle: {
           position: 'absolute' as const,
@@ -167,28 +167,26 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         sloganStyle: {
           position: 'absolute' as const,
           top: '38%',
-          right: '5%', // 오른쪽에 붙임
+          right: '5%',
           width: '40%',
           textAlign: 'right' as const,
           fontSize: '1.5rem',
           fontWeight: 700,
           color: '#9C27B0',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
           whiteSpace: 'pre-line',
         },
         smallSloganStyle: {
           position: 'absolute' as const,
-          bottom: '6.5rem', // 이름(6.2rem)+여백, 이름/번호 위
+          bottom: '6.5rem',
           left: 0,
           width: '100%',
           textAlign: 'center' as const,
           fontSize: '1.3rem',
           fontWeight: 700,
           color: '#fff',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
         },
       };
-    case LAYOUTS.FOCUS_INFO:
+    case 'FOCUS_INFO':
       if (infoSubLayout === 'name') {
         return {
           imageStyle: {
@@ -204,7 +202,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           },
           nameStyle: {
             position: 'absolute' as const,
-            top: '2.2rem', // 작은 슬로건 높이만큼 아래로
+            top: '2.2rem',
             left: '50%',
             transform: 'translateX(-50%)',
             fontSize: '6.2rem',
@@ -225,7 +223,6 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
             fontSize: '1.5rem',
             fontWeight: 700,
             color: '#9C27B0',
-            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
             whiteSpace: 'pre-line',
           },
           smallSloganStyle: {
@@ -237,7 +234,6 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
             fontSize: '1.3rem',
             fontWeight: 700,
             color: '#fff',
-            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
           },
         };
       } else {
@@ -276,7 +272,6 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
             fontSize: '1.5rem',
             fontWeight: 700,
             color: '#9C27B0',
-            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
             whiteSpace: 'pre-line',
           },
           smallSloganStyle: {
@@ -288,7 +283,6 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
             fontSize: '1.3rem',
             fontWeight: 700,
             color: '#fff',
-            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
           },
         };
       }
@@ -328,7 +322,6 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           fontSize: '1.5rem',
           fontWeight: 700,
           color: '#9C27B0',
-          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
           whiteSpace: 'pre-line',
         },
       };
@@ -368,7 +361,7 @@ const PosterPreview = ({ data, posterRef, layoutStyle }: { data: PosterData; pos
         position: 'relative',
         marginTop: '2rem',
         border: '3px solid #000000',
-        backgroundColor: '#ffffff', // 항상 흰색
+        backgroundColor: '#ffffff',
         width: '420px',
         height: '594px',
         overflow: 'hidden',
@@ -399,7 +392,7 @@ const PosterPreview = ({ data, posterRef, layoutStyle }: { data: PosterData; pos
         {data.candidateName.trim() || '1 홍길동'}
       </h2>
       {/* 작은 슬로건 (이름/번호 위에, 겹치지 않게) */}
-      {(data.layout === LAYOUTS.FOCUS_NAME || data.layout === LAYOUTS.FOCUS_SLOGAN || data.layout === LAYOUTS.FOCUS_INFO) && layoutStyle.smallSloganStyle && (
+      {(data.layout === 'FOCUS_NAME' || data.layout === 'FOCUS_SLOGAN' || data.layout === 'FOCUS_INFO') && layoutStyle.smallSloganStyle && (
         <div
           style={{
             ...layoutStyle.smallSloganStyle,
@@ -427,194 +420,163 @@ const inputStyle = {
   outline: 'none',
 };
 
-export default function GeneratorPage() {
-  const [posterData, setPosterData] = useState<PosterData>(INITIAL_POSTER_DATA);
-  const posterRef = useRef<HTMLDivElement>(null);
+function GeneratorPage({ initialLayout }: { initialLayout?: string }) {
+  const [posterData, setPosterData] = useState<PosterData>({
+    ...INITIAL_POSTER_DATA,
+    layout: initialLayout || null,
+    infoSubLayout: 'name', // 기본값
+  });
+  const [showLayoutSelector, setShowLayoutSelector] = useState(!initialLayout);
+  const posterRef = useRef<HTMLDivElement | null>(null);
 
-  const handleSelectLayout = useCallback((layout: string) => {
-    setPosterData(prev => ({ 
-      ...prev, 
-      layout,
-      infoSubLayout: layout === LAYOUTS.FOCUS_INFO ? 'name' : undefined 
-    }));
-  }, []);
+  // If initialLayout is set, do not show the layout selector
+  const handleLayoutSelect = (layout: string) => {
+    setPosterData((prev) => ({ ...prev, layout, infoSubLayout: 'name' }));
+    setShowLayoutSelector(false);
+  };
 
-  const handleSelectInfoSubLayout = useCallback((subLayout: 'name' | 'slogan') => {
-    setPosterData(prev => ({ ...prev, infoSubLayout: subLayout }));
-  }, []);
-
-  const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+  // Poster form handlers
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setPosterData((prev) => ({ ...prev, [name]: value }));
+  };
+  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        setPosterData(prev => ({ ...prev, imageSrc: reader.result as string }));
+      reader.onloadend = () => {
+        setPosterData((prev) => ({ ...prev, imageSrc: reader.result as string }));
       };
       reader.readAsDataURL(file);
     }
-  }, []);
+  };
+  const handleColorChange = (field: keyof PosterData, value: string) => {
+    setPosterData((prev) => ({ ...prev, [field]: value }));
+  };
+  const handleInfoSubLayoutChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPosterData((prev) => ({ ...prev, infoSubLayout: e.target.value as 'name' | 'slogan' }));
+  };
 
-  const handleDownload = useCallback(() => {
-    if (posterRef.current) {
-      html2canvas(posterRef.current).then((canvas) => {
-        const link = document.createElement('a');
-        link.href = canvas.toDataURL('image/png');
-        link.download = 'election_poster.png';
-        link.click();
-      });
-    }
-  }, []);
+  // Download logic
+  const handleDownload = async () => {
+    if (!posterRef.current) return;
+    const canvas = await html2canvas(posterRef.current);
+    const link = document.createElement('a');
+    link.download = 'poster.png';
+    link.href = canvas.toDataURL();
+    link.click();
+  };
 
-  const updatePosterData = useCallback((key: keyof PosterData, value: string) => {
-    setPosterData(prev => ({ ...prev, [key]: value }));
-  }, []);
+  const layoutStyle = getLayoutStyle(posterData.layout, posterData.infoSubLayout);
 
   return (
-    <div
-      style={{
-        padding: '2rem',
-        backgroundColor: '#000000', // 서비스 전체 배경 검정
-        color: '#00FFC2', // 서비스 전체 글씨 민트
-        minHeight: '100vh', // 화면 꽉 차게
-      }}
-    >
-      <h1>🎨 Election Poster Generator</h1>
-
-      <h2>강조하고 싶은 점을 선택하세요:</h2>
-      <LayoutSelector onSelect={handleSelectLayout} />
-  
+    <div>
+      {showLayoutSelector && (
+        <LayoutSelector onSelect={handleLayoutSelect} />
+      )}
       {posterData.layout && (
-        <div
-          style={{
-            border: '1px solid #00FFC2', // 테두리 민트 (서비스 느낌 통일)
-            padding: '1rem',
-            marginTop: '1.5rem',
-          }}
-        >
-          <h2>선택한 레이아웃: {posterData.layout}</h2>
-  
-          {posterData.layout === LAYOUTS.FOCUS_INFO && (
-            <div style={{ marginTop: '1rem' }}>
-              <h3>정보 효율 전달형 서브 레이아웃 선택:</h3>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button 
-                  onClick={() => handleSelectInfoSubLayout('name')}
-                  style={{ 
-                    backgroundColor: posterData.infoSubLayout === 'name' ? '#4CAF50' : '#ccc',
-                    color: 'white',
-                    padding: '0.5rem 1rem',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  이름 인지 강화형
-                </button>
-                <button 
-                  onClick={() => handleSelectInfoSubLayout('slogan')}
-                  style={{ 
-                    backgroundColor: posterData.infoSubLayout === 'slogan' ? '#4CAF50' : '#ccc',
-                    color: 'white',
-                    padding: '0.5rem 1rem',
-                    border: 'none',
-                    borderRadius: '4px',
-                    cursor: 'pointer'
-                  }}
-                >
-                  슬로건 집중 유도형
-                </button>
-              </div>
-      </div>
-          )}
-
-          <h3 style={{ marginTop: '1.5rem' }}>얼굴 사진 업로드:</h3>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            style={inputStyle}
-          />
-
-          {posterData.imageSrc && (
-            <div style={{ marginTop: '1rem' }}>
-              <img src={posterData.imageSrc} alt="Uploaded" style={{ maxWidth: '300px', height: 'auto' }} />
+        <div style={{ display: 'flex', gap: '2rem', alignItems: 'flex-start' }}>
+          <div>
+            <div style={{ marginBottom: '1rem', fontWeight: 'bold' }}>
+              선택한 레이아웃: {posterData.layout}
             </div>
-          )}
-
-          <h3 style={{ marginTop: '1.5rem' }}>후보자 이름 및 번호 입력:</h3>
-          <input
-            type="text"
-            value={posterData.candidateName}
-            onChange={(e) => updatePosterData('candidateName', e.target.value)}
-            placeholder="1 홍길동"
-            style={inputStyle}
-          />
-
-          <h3 style={{ marginTop: '1.5rem' }}>슬로건 입력:</h3>
-          <input
-            type="text"
-            value={posterData.slogan}
-            onChange={(e) => updatePosterData('slogan', e.target.value)}
-            placeholder="모두가 행복한 세상"
-            style={inputStyle}
-          />
-
-          {/* 작은 슬로건 입력 (특정 레이아웃에서만 표시) */}
-          {(posterData.layout === LAYOUTS.FOCUS_NAME || 
-            posterData.layout === LAYOUTS.FOCUS_SLOGAN || 
-            posterData.layout === LAYOUTS.FOCUS_INFO) && (
-            <>
-              <h3 style={{ marginTop: '1.5rem' }}>작은 슬로건 입력:</h3>
+            {/* FOCUS_INFO일 때 infoSubLayout 선택 UI */}
+            {posterData.layout === 'FOCUS_INFO' && (
+              <div style={{ marginBottom: '1rem' }}>
+                <span>세부 유형 선택: </span>
+                <label style={{ marginRight: '1rem' }}>
+                  <input
+                    type="radio"
+                    name="infoSubLayout"
+                    value="name"
+                    checked={posterData.infoSubLayout === 'name'}
+                    onChange={handleInfoSubLayoutChange}
+                  />
+                  이름 인지 강화형
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="infoSubLayout"
+                    value="slogan"
+                    checked={posterData.infoSubLayout === 'slogan'}
+                    onChange={handleInfoSubLayoutChange}
+                  />
+                  슬로건 집중 유도형 및 전반 탐색 유도형
+                </label>
+              </div>
+            )}
+            <div style={{ marginBottom: '1rem' }}>
+              얼굴 사진 업로드:<br />
+              <input type="file" accept="image/*" onChange={handleImageUpload} style={inputStyle} />
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              후보자 이름 및 번호 입력:<br />
               <input
                 type="text"
-                value={posterData.smallSlogan}
-                onChange={(e) => updatePosterData('smallSlogan', e.target.value)}
-                placeholder="세상을 바꾸는"
+                name="candidateName"
+                value={posterData.candidateName}
+                onChange={handleInputChange}
                 style={inputStyle}
+                placeholder="1 홍길동"
               />
-              <ColorPicker
-                label="작은 슬로건 글자색 선택:"
-                value={posterData.smallSloganColor}
-                onChange={(value) => updatePosterData('smallSloganColor', value)}
+            </div>
+            <div style={{ marginBottom: '1rem' }}>
+              슬로건 입력:<br />
+              <textarea
+                name="slogan"
+                value={posterData.slogan}
+                onChange={handleInputChange}
+                style={inputStyle}
+                placeholder="모두가 행복한 세상"
               />
-            </>
-          )}
-  
-          <ColorPicker
-            label="이름 글자색 선택:"
-            value={posterData.nameColor}
-            onChange={(value) => updatePosterData('nameColor', value)}
-          />
-  
-          <ColorPicker
-            label="슬로건 글자색 선택:"
-            value={posterData.sloganColor}
-            onChange={(value) => updatePosterData('sloganColor', value)}
-          />
-  
-          <PosterPreview 
-            data={posterData} 
-            posterRef={posterRef} 
-            layoutStyle={getLayoutStyle(posterData.layout, posterData.infoSubLayout)} 
-          />
-  
-          <button
-            onClick={handleDownload}
-            style={{
-                marginTop: '1.5rem',
-                padding: '0.75rem 1.5rem',
-                fontSize: '1rem',
-                backgroundColor: '#4CAF50',
-                color: '#fff',
-                border: 'none',
-                borderRadius: '5px',
-              cursor: 'pointer',
-            }}
-            >
-            📥 포스터 다운로드
-            </button>
+            </div>
+            {/* 작은 슬로건 입력 및 색상 선택은 인물 집중형이 아닐 때만 표시 */}
+            {posterData.layout !== 'FOCUS_PERSON' && (
+              <>
+                <div style={{ marginBottom: '1rem' }}>
+                  작은 슬로건 입력:<br />
+                  <input
+                    type="text"
+                    name="smallSlogan"
+                    value={posterData.smallSlogan}
+                    onChange={handleInputChange}
+                    style={inputStyle}
+                    placeholder="세상을 바꾸는"
+                  />
+                </div>
+                <ColorPicker label="작은 슬로건 글자색 선택:" value={posterData.smallSloganColor} onChange={(v) => handleColorChange('smallSloganColor', v)} />
+              </>
+            )}
+            <ColorPicker label="이름 글자색 선택:" value={posterData.nameColor} onChange={(v) => handleColorChange('nameColor', v)} />
+            <ColorPicker label="슬로건 글자색 선택:" value={posterData.sloganColor} onChange={(v) => handleColorChange('sloganColor', v)} />
+            <div style={{ marginTop: '2rem' }}>
+              <button onClick={handleDownload} style={{ padding: '0.75rem 2rem', fontSize: '1.1rem', background: '#00FFC2', color: '#000', border: 'none', borderRadius: '6px', fontWeight: 'bold', cursor: 'pointer' }}>
+                포스터 이미지 다운로드
+              </button>
+            </div>
+          </div>
+          <PosterPreview data={posterData} posterRef={posterRef} layoutStyle={layoutStyle} />
         </div>
       )}
+    </div>
+  );
+}
+
+export default function GeneratorPageWrapper() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const layout = searchParams.get('layout');
+
+  if (!layout) {
+    router.replace('/select-layout');
+    return null;
+  }
+
+  return (
+    <div style={{ minHeight: '100vh', background: '#000', color: '#00FFC2' }}>
+      <button onClick={() => router.push('/select-layout')} style={{ marginBottom: '1rem', color: '#00FFC2' }}>← 뒤로가기</button>
+      <GeneratorPage initialLayout={layout} />
     </div>
   );
 }
