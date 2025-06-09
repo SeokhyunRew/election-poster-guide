@@ -63,7 +63,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 0,
+          bottom: 24,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -72,7 +72,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           width: '95%',
           textAlign: 'center' as const,
           letterSpacing: '-2px',
-          lineHeight: 1.1,
+          lineHeight: 1.05,
           textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
@@ -151,7 +151,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 0,
+          bottom: 24,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -160,7 +160,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           width: '95%',
           textAlign: 'center' as const,
           letterSpacing: '-2px',
-          lineHeight: 1.1,
+          lineHeight: 1.05,
           textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
@@ -250,7 +250,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           },
           nameStyle: {
             position: 'absolute' as const,
-            bottom: 0,
+            bottom: 24,
             left: '50%',
             transform: 'translateX(-50%)',
             fontSize: '6.2rem',
@@ -259,7 +259,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
             width: '95%',
             textAlign: 'center' as const,
             letterSpacing: '-2px',
-            lineHeight: 1.1,
+            lineHeight: 1.05,
             textShadow: '0 2px 8px rgba(0,0,0,0.25)',
           },
           sloganStyle: {
@@ -300,7 +300,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: 0,
+          bottom: 24,
           left: '50%',
           transform: 'translateX(-50%)',
           fontSize: '6.2rem',
@@ -309,7 +309,7 @@ const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'
           width: '95%',
           textAlign: 'center' as const,
           letterSpacing: '-2px',
-          lineHeight: 1.1,
+          lineHeight: 1.05,
           textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
@@ -365,6 +365,7 @@ const PosterPreview = ({ data, posterRef, layoutStyle }: { data: PosterData; pos
         height: '594px',
         overflow: 'hidden',
         fontFamily: 'Arial, sans-serif',
+        boxSizing: 'border-box',
       }}
     >
       {data.imageSrc && (
@@ -594,3 +595,5 @@ function GeneratorPageWrapperWithSuspense() {
 }
 
 export default GeneratorPageWrapperWithSuspense;
+
+//test
