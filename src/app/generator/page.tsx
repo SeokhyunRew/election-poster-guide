@@ -10,9 +10,11 @@ interface PosterData {
   imageSrc: string | null;
   candidateName: string;
   slogan: string;
-  bgColor: string;
+  smallSlogan: string;
+  smallSloganColor: string;
   nameColor: string;
   sloganColor: string;
+  infoSubLayout?: 'name' | 'slogan';
 }
 
 interface LayoutStyle {
@@ -35,192 +37,299 @@ const INITIAL_POSTER_DATA: PosterData = {
   imageSrc: null,
   candidateName: '',
   slogan: '',
-  bgColor: '#ffffff',
+  smallSlogan: '',
+  smallSloganColor: '#000000',
   nameColor: '#000000',
   sloganColor: '#000000',
+  infoSubLayout: undefined,
 };
 
-const getLayoutStyle = (layout: string | null): LayoutStyle => {
+const getLayoutStyle = (layout: string | null, infoSubLayout?: 'name' | 'slogan'): LayoutStyle => {
   switch (layout) {
-    case LAYOUTS.FOCUS_PERSON: // 인물 집중 유도형
+    case LAYOUTS.FOCUS_PERSON: // 인물 집중형
       return {
         imageStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '60%',
+          bottom: 0,
+          left: '50%',
           transform: 'translateX(-50%)',
-          width: '200px',
-          height: 'auto',
-          borderRadius: '8px',
+          width: '100%',
+          height: '100%', // 아래 70%만 채움
+          borderRadius: 0,
+          objectFit: 'cover',
+          maxHeight: '85%',
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: '50px',
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          fontSize: '2.5rem',
-          color: '#000000',
+          fontSize: '6.2rem',
+          color: '#fff',
+          fontWeight: 900,
+          width: '95%',
+          textAlign: 'center' as const,
+          letterSpacing: '-2px',
+          lineHeight: 1.1,
+          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '25%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.8rem',
-          color: '#000000',
-          textAlign: 'center',
-          padding: '0 20px',
-          width: '180px',
+          top: '38%', // 얼굴 높이쯤
+          left: '5%', // 왼쪽에 붙임
+          width: '40%',
+          textAlign: 'left' as const,
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          color: '#9C27B0',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          whiteSpace: 'pre-line',
         },
       };
-    case LAYOUTS.FOCUS_NAME: // 이름 인지 강화형
+    case LAYOUTS.FOCUS_NAME:
       return {
         imageStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '60%',
+          bottom: 0,
+          left: '50%',
           transform: 'translateX(-50%)',
-          width: '200px',
-          height: 'auto',
-          borderRadius: '8px',
+          width: '100%',
+          height: '100%',
+          borderRadius: 0,
+          objectFit: 'cover',
+          maxHeight: '85%',
         },
         nameStyle: {
           position: 'absolute' as const,
-          top: '30px',
+          top: '1.6rem', // 간격을 줄임
           left: '50%',
           transform: 'translateX(-50%)',
-          fontSize: '2.5rem',
-          color: '#000000',
+          fontSize: '6.2rem',
+          color: '#fff',
+          fontWeight: 900,
+          width: '95%',
+          textAlign: 'center' as const,
+          letterSpacing: '-2px',
+          lineHeight: 1.1,
+          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '25%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.8rem',
-          color: '#000000',
-          textAlign: 'center',
-          padding: '0 20px',
-          width: '180px',
+          top: '38%',
+          left: '5%',
+          width: '40%',
+          textAlign: 'left' as const,
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          color: '#9C27B0',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          whiteSpace: 'pre-line',
         },
         smallSloganStyle: {
           position: 'absolute' as const,
-          top: '10px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.2rem',
-          color: '#000000',
-          textAlign: 'center',
+          top: 0,
+          left: 0,
+          width: '100%',
+          textAlign: 'center' as const,
+          fontSize: '1.3rem', // 글자 크기도 살짝 줄임
+          fontWeight: 700,
+          color: '#fff',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
         },
       };
-    case LAYOUTS.FOCUS_SLOGAN: // 슬로건 집중 유도형 및 전반 탐색 유도형
+    case LAYOUTS.FOCUS_SLOGAN:
       return {
         imageStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '40%',
+          bottom: 0,
+          left: '50%',
           transform: 'translateX(-50%)',
-          width: '200px',
-          height: 'auto',
-          borderRadius: '8px',
+          width: '100%',
+          height: '100%',
+          borderRadius: 0,
+          objectFit: 'cover',
+          maxHeight: '85%',
         },
         nameStyle: {
           position: 'absolute' as const,
-          bottom: '50px',
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          fontSize: '2.5rem',
-          color: '#000000',
+          fontSize: '6.2rem',
+          color: '#fff',
+          fontWeight: 900,
+          width: '95%',
+          textAlign: 'center' as const,
+          letterSpacing: '-2px',
+          lineHeight: 1.1,
+          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
           position: 'absolute' as const,
-          top: '150px',
-          left: '75%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.8rem',
-          color: '#000000',
-          textAlign: 'center',
-          padding: '0 20px',
-          width: '180px',
+          top: '38%',
+          right: '5%', // 오른쪽에 붙임
+          width: '40%',
+          textAlign: 'right' as const,
+          fontSize: '1.5rem',
+          fontWeight: 700,
+          color: '#9C27B0',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          whiteSpace: 'pre-line',
         },
         smallSloganStyle: {
           position: 'absolute' as const,
-          bottom: '100px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.2rem',
-          color: '#000000',
-          textAlign: 'center',
+          bottom: '6.5rem', // 이름(6.2rem)+여백, 이름/번호 위
+          left: 0,
+          width: '100%',
+          textAlign: 'center' as const,
+          fontSize: '1.3rem',
+          fontWeight: 700,
+          color: '#fff',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
         },
       };
-    case LAYOUTS.FOCUS_INFO: // 정보 효율 전달형
-      return {
-        imageStyle: {
-          position: 'absolute' as const,
-          top: '150px',
-          left: '60%',
-          transform: 'translateX(-50%)',
-          width: '200px',
-          height: 'auto',
-          borderRadius: '8px',
-        },
-        nameStyle: {
-          position: 'absolute' as const,
-          top: '30px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '2.5rem',
-          color: '#000000',
-        },
-        sloganStyle: {
-          position: 'absolute' as const,
-          top: '150px',
-          left: '25%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.8rem',
-          color: '#000000',
-          textAlign: 'center',
-          padding: '0 20px',
-          width: '180px',
-        },
-        smallSloganStyle: {
-          position: 'absolute' as const,
-          top: '10px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          fontSize: '1.2rem',
-          color: '#000000',
-          textAlign: 'center',
-        },
-      };
+    case LAYOUTS.FOCUS_INFO:
+      if (infoSubLayout === 'name') {
+        return {
+          imageStyle: {
+            position: 'absolute' as const,
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100%',
+            height: '100%',
+            borderRadius: 0,
+            objectFit: 'cover',
+            maxHeight: '85%',
+          },
+          nameStyle: {
+            position: 'absolute' as const,
+            top: '2.2rem', // 작은 슬로건 높이만큼 아래로
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '6.2rem',
+            color: '#fff',
+            fontWeight: 900,
+            width: '95%',
+            textAlign: 'center' as const,
+            letterSpacing: '-2px',
+            lineHeight: 1.1,
+            textShadow: '0 2px 8px rgba(0,0,0,0.25)',
+          },
+          sloganStyle: {
+            position: 'absolute' as const,
+            top: '38%',
+            left: '5%',
+            width: '40%',
+            textAlign: 'left' as const,
+            fontSize: '1.5rem',
+            fontWeight: 700,
+            color: '#9C27B0',
+            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+            whiteSpace: 'pre-line',
+          },
+          smallSloganStyle: {
+            position: 'absolute' as const,
+            top: 0,
+            left: 0,
+            width: '100%',
+            textAlign: 'center' as const,
+            fontSize: '1.3rem',
+            fontWeight: 700,
+            color: '#fff',
+            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          },
+        };
+      } else {
+        return {
+          imageStyle: {
+            position: 'absolute' as const,
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            width: '100%',
+            height: '100%',
+            borderRadius: 0,
+            objectFit: 'cover',
+            maxHeight: '85%',
+          },
+          nameStyle: {
+            position: 'absolute' as const,
+            bottom: 0,
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '6.2rem',
+            color: '#fff',
+            fontWeight: 900,
+            width: '95%',
+            textAlign: 'center' as const,
+            letterSpacing: '-2px',
+            lineHeight: 1.1,
+            textShadow: '0 2px 8px rgba(0,0,0,0.25)',
+          },
+          sloganStyle: {
+            position: 'absolute' as const,
+            top: '38%',
+            right: '5%',
+            width: '40%',
+            textAlign: 'right' as const,
+            fontSize: '1.5rem',
+            fontWeight: 700,
+            color: '#9C27B0',
+            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+            whiteSpace: 'pre-line',
+          },
+          smallSloganStyle: {
+            position: 'absolute' as const,
+            bottom: '6.5rem',
+            left: 0,
+            width: '100%',
+            textAlign: 'center' as const,
+            fontSize: '1.3rem',
+            fontWeight: 700,
+            color: '#fff',
+            textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          },
+        };
+      }
     default:
       return {
         imageStyle: {
           position: 'absolute' as const,
-          top: '150px',
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          width: '200px',
-          height: 'auto',
-          borderRadius: '8px',
+          width: '100%',
+          height: '100%',
+          borderRadius: 0,
+          objectFit: 'cover',
+          maxHeight: '85%',
         },
         nameStyle: {
           position: 'absolute' as const,
-          top: '30px',
+          bottom: 0,
           left: '50%',
           transform: 'translateX(-50%)',
-          fontSize: '2.5rem',
-          color: '#000000',
+          fontSize: '6.2rem',
+          color: '#fff',
+          fontWeight: 900,
+          width: '95%',
+          textAlign: 'center' as const,
+          letterSpacing: '-2px',
+          lineHeight: 1.1,
+          textShadow: '0 2px 8px rgba(0,0,0,0.25)',
         },
         sloganStyle: {
           position: 'absolute' as const,
-          bottom: '50px',
-          left: '50%',
-          transform: 'translateX(-50%)',
+          top: '38%',
+          left: '5%',
+          width: '40%',
+          textAlign: 'left' as const,
           fontSize: '1.5rem',
-          color: '#000000',
-          textAlign: 'center',
-          padding: '0 20px',
+          fontWeight: 700,
+          color: '#9C27B0',
+          textShadow: '0 2px 8px rgba(0,0,0,0.7)',
+          whiteSpace: 'pre-line',
         },
       };
   }
@@ -244,20 +353,24 @@ const ColorPicker = ({ label, value, onChange }: { label: string; value: string;
   </div>
 );
 
-const PosterPreview = ({ data, posterRef }: { data: PosterData; posterRef: React.RefObject<HTMLDivElement | null> }) => {
-  const layoutStyle = getLayoutStyle(data.layout);
-  
+// PosterPreview 컴포넌트 내부에서 사용할 슬로건 4글자 단위 줄바꿈 함수
+function splitSloganBy4(str: string) {
+  if (!str) return '';
+  // 한글, 영문, 숫자 모두 4글자 단위로 줄바꿈
+  return str.replace(/(.{4})/g, '$1\n').trim();
+}
+
+const PosterPreview = ({ data, posterRef, layoutStyle }: { data: PosterData; posterRef: React.RefObject<HTMLDivElement | null>; layoutStyle: LayoutStyle }) => {
   return (
     <div
       ref={posterRef}
       style={{
+        position: 'relative',
         marginTop: '2rem',
         border: '3px solid #000000',
-        backgroundColor: '#ffffff',
+        backgroundColor: '#ffffff', // 항상 흰색
         width: '420px',
         height: '594px',
-        position: 'relative',
-        color: '#000000',
         overflow: 'hidden',
         fontFamily: 'Arial, sans-serif',
       }}
@@ -269,25 +382,49 @@ const PosterPreview = ({ data, posterRef }: { data: PosterData; posterRef: React
           style={layoutStyle.imageStyle}
         />
       )}
-
-      <h2 style={layoutStyle.nameStyle}>
-        {data.candidateName || '후보자 이름'}
+      {/* 슬로건 (왼쪽/오른쪽) - 4글자마다 줄바꿈 */}
+      <div
+        style={{
+          ...layoutStyle.sloganStyle,
+          color: data.sloganColor,
+          zIndex: 2,
+          pointerEvents: 'none',
+          whiteSpace: 'pre-line',
+        }}
+      >
+        {splitSloganBy4(data.slogan.trim() || '모두가 행복한 세상')}
+      </div>
+      {/* 이름 및 번호 */}
+      <h2 style={{ ...layoutStyle.nameStyle, color: data.nameColor, zIndex: 2 }}>
+        {data.candidateName.trim() || '1 홍길동'}
       </h2>
-
-      <p style={layoutStyle.sloganStyle}>
-        {data.slogan || '여기에 슬로건 입력'}
-      </p>
-
-      {(data.layout === LAYOUTS.FOCUS_NAME || 
-        data.layout === LAYOUTS.FOCUS_SLOGAN || 
-        data.layout === LAYOUTS.FOCUS_INFO) && 
-        layoutStyle.smallSloganStyle && (
-        <p style={layoutStyle.smallSloganStyle}>
-          {data.slogan || '작은 슬로건'}
-        </p>
+      {/* 작은 슬로건 (이름/번호 위에, 겹치지 않게) */}
+      {(data.layout === LAYOUTS.FOCUS_NAME || data.layout === LAYOUTS.FOCUS_SLOGAN || data.layout === LAYOUTS.FOCUS_INFO) && layoutStyle.smallSloganStyle && (
+        <div
+          style={{
+            ...layoutStyle.smallSloganStyle,
+            color: data.smallSloganColor,
+            zIndex: 3,
+            pointerEvents: 'none',
+          }}
+        >
+          {data.smallSlogan.trim() || '세상을 바꾸는'}
+        </div>
       )}
     </div>
   );
+};
+
+// 스타일 공통 변수로 선언
+const inputStyle = {
+  padding: '0.5rem',
+  fontSize: '1rem',
+  width: '300px',
+  border: '2px solid #00FFC2',
+  borderRadius: '4px',
+  background: '#000',
+  color: '#00FFC2',
+  outline: 'none',
 };
 
 export default function GeneratorPage() {
@@ -295,7 +432,15 @@ export default function GeneratorPage() {
   const posterRef = useRef<HTMLDivElement>(null);
 
   const handleSelectLayout = useCallback((layout: string) => {
-    setPosterData(prev => ({ ...prev, layout }));
+    setPosterData(prev => ({ 
+      ...prev, 
+      layout,
+      infoSubLayout: layout === LAYOUTS.FOCUS_INFO ? 'name' : undefined 
+    }));
+  }, []);
+
+  const handleSelectInfoSubLayout = useCallback((subLayout: 'name' | 'slogan') => {
+    setPosterData(prev => ({ ...prev, infoSubLayout: subLayout }));
   }, []);
 
   const handleImageChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -334,8 +479,8 @@ export default function GeneratorPage() {
       }}
     >
       <h1>🎨 Election Poster Generator</h1>
-  
-      <h2>1️⃣ 강조하고 싶은 점을 선택하세요:</h2>
+
+      <h2>강조하고 싶은 점을 선택하세요:</h2>
       <LayoutSelector onSelect={handleSelectLayout} />
   
       {posterData.layout && (
@@ -348,70 +493,128 @@ export default function GeneratorPage() {
         >
           <h2>선택한 레이아웃: {posterData.layout}</h2>
   
-          <h3 style={{ marginTop: '1.5rem' }}>2️⃣ 얼굴 사진 업로드:</h3>
-          <input type="file" accept="image/*" onChange={handleImageChange} />
-  
+          {posterData.layout === LAYOUTS.FOCUS_INFO && (
+            <div style={{ marginTop: '1rem' }}>
+              <h3>정보 효율 전달형 서브 레이아웃 선택:</h3>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button 
+                  onClick={() => handleSelectInfoSubLayout('name')}
+                  style={{ 
+                    backgroundColor: posterData.infoSubLayout === 'name' ? '#4CAF50' : '#ccc',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  이름 인지 강화형
+                </button>
+                <button 
+                  onClick={() => handleSelectInfoSubLayout('slogan')}
+                  style={{ 
+                    backgroundColor: posterData.infoSubLayout === 'slogan' ? '#4CAF50' : '#ccc',
+                    color: 'white',
+                    padding: '0.5rem 1rem',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  슬로건 집중 유도형
+                </button>
+              </div>
+      </div>
+          )}
+
+          <h3 style={{ marginTop: '1.5rem' }}>얼굴 사진 업로드:</h3>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageChange}
+            style={inputStyle}
+          />
+
           {posterData.imageSrc && (
             <div style={{ marginTop: '1rem' }}>
               <img src={posterData.imageSrc} alt="Uploaded" style={{ maxWidth: '300px', height: 'auto' }} />
             </div>
           )}
-  
-          <h3 style={{ marginTop: '1.5rem' }}>3️⃣ 후보자 이름 입력:</h3>
+
+          <h3 style={{ marginTop: '1.5rem' }}>후보자 이름 및 번호 입력:</h3>
           <input
             type="text"
             value={posterData.candidateName}
             onChange={(e) => updatePosterData('candidateName', e.target.value)}
-            placeholder="예) 홍길동"
-            style={{ padding: '0.5rem', fontSize: '1rem', width: '300px' }}
+            placeholder="1 홍길동"
+            style={inputStyle}
           />
-  
-          <h3 style={{ marginTop: '1.5rem' }}>4️⃣ 슬로건 입력:</h3>
+
+          <h3 style={{ marginTop: '1.5rem' }}>슬로건 입력:</h3>
           <input
             type="text"
             value={posterData.slogan}
             onChange={(e) => updatePosterData('slogan', e.target.value)}
-            placeholder="예) 모두가 행복한 세상"
-            style={{ padding: '0.5rem', fontSize: '1rem', width: '300px' }}
+            placeholder="모두가 행복한 세상"
+            style={inputStyle}
           />
+
+          {/* 작은 슬로건 입력 (특정 레이아웃에서만 표시) */}
+          {(posterData.layout === LAYOUTS.FOCUS_NAME || 
+            posterData.layout === LAYOUTS.FOCUS_SLOGAN || 
+            posterData.layout === LAYOUTS.FOCUS_INFO) && (
+            <>
+              <h3 style={{ marginTop: '1.5rem' }}>작은 슬로건 입력:</h3>
+              <input
+                type="text"
+                value={posterData.smallSlogan}
+                onChange={(e) => updatePosterData('smallSlogan', e.target.value)}
+                placeholder="세상을 바꾸는"
+                style={inputStyle}
+              />
+              <ColorPicker
+                label="작은 슬로건 글자색 선택:"
+                value={posterData.smallSloganColor}
+                onChange={(value) => updatePosterData('smallSloganColor', value)}
+              />
+            </>
+          )}
   
           <ColorPicker
-            label="5️⃣ 배경색 선택:"
-            value={posterData.bgColor}
-            onChange={(value) => updatePosterData('bgColor', value)}
-          />
-  
-          <ColorPicker
-            label="6️⃣ 이름 글자색 선택:"
+            label="이름 글자색 선택:"
             value={posterData.nameColor}
             onChange={(value) => updatePosterData('nameColor', value)}
           />
   
           <ColorPicker
-            label="7️⃣ 슬로건 글자색 선택:"
+            label="슬로건 글자색 선택:"
             value={posterData.sloganColor}
             onChange={(value) => updatePosterData('sloganColor', value)}
           />
   
-          <PosterPreview data={posterData} posterRef={posterRef} />
+          <PosterPreview 
+            data={posterData} 
+            posterRef={posterRef} 
+            layoutStyle={getLayoutStyle(posterData.layout, posterData.infoSubLayout)} 
+          />
   
           <button
             onClick={handleDownload}
             style={{
-              marginTop: '1.5rem',
-              padding: '0.75rem 1.5rem',
-              fontSize: '1rem',
-              backgroundColor: '#4CAF50',
-              color: '#fff',
-              border: 'none',
-              borderRadius: '5px',
+                marginTop: '1.5rem',
+                padding: '0.75rem 1.5rem',
+                fontSize: '1rem',
+                backgroundColor: '#4CAF50',
+                color: '#fff',
+                border: 'none',
+                borderRadius: '5px',
               cursor: 'pointer',
             }}
-          >
+            >
             📥 포스터 다운로드
-          </button>
+            </button>
         </div>
       )}
     </div>
-  );  
+  );
 }
